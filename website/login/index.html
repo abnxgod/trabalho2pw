@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Log in</title>
+    <link rel="stylesheet" href="main.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Welcome to Abner's CV</h2>
+      <p>If you are a guest, use guest for both fiels</p>
+      <div id="loginResult"></div>
+      <div id="loginForm">
+        <div class="form-group">
+          <label for="Username">Username:</label>
+          <input
+            type="username"
+            id="username"
+            name="username"
+            placeholder="Enter your username"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+        <p id="error" class="error"></p>
+        <div class="form-group">
+          <button type="button" onclick="login()">Login</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /*function login() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        // Replace with your login endpoint URL
+        const url = 'http://localhost:8080/api/user/login';
+
+        const requestBody = { username, password };
+
+        fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            /*localStorage.setItem('token', data.token);
+            window.location.href = 'index2.html';
+            // Handle login response
+            document.getElementById('loginResult').innerHTML =
+              JSON.stringify(data);
+          })*/ /*
+          if (data.token) {
+           localStorage.setItem('token', data.token);
+           window.location.href = 'index2.html';
+           } else {
+           window.location.href = 'index3.html';
+            }
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+      }*/
+      // Login exists attempt
+      /*function login() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        const url = "http://localhost:8080/api/user/login";
+
+        const requestBody = { username, password };
+
+        fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.token) {
+              localStorage.setItem("token", data.token);
+              window.location.href = "index2.html";
+            } else {
+              const checkUrl = `http://localhost:8080/api/user/check?username=${username}`;
+              fetch(checkUrl)
+                .then((response) => response.json())
+                .then((userExists) => {
+                  if (userExists) {
+                    window.location.href = "index2.html";
+                  } else {
+                    window.location.href = "index3.html";
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
+                });
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });*/
+
+      function login() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        const url = "http://localhost:8080/api/user/login";
+
+        const requestBody = { username, password };
+
+        fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.token && data.userExists) {
+              document.getElementById("error").innerHTML = "";
+              localStorage.setItem("token", data.token);
+              if(data.admin){
+                window.location.href = "admin.html";
+              }else{
+                window.location.href = "guest.html";
+              }
+            } else {
+              document.getElementById("error").innerHTML =
+                "Não foi possível efetuar login";
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+    </script>
+  </body>
+</html>

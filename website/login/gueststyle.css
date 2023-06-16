@@ -1,0 +1,104 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background: url(imgs/sky.jpg);
+  background-size: cover;
+  color: cyan;
+  align-items: center;
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+.coverdiv {
+  width: 1310px;
+  height: 400px;
+  margin-top: 170px;
+  display: flex;
+}
+
+.boxdiv {
+  margin: 10px;
+  width: 500px;
+  height: 600px;
+  box-shadow: -1px 0 10px #0073a0;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: #120643;
+  overflow: hidden;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px 10px;
+  background: transparent;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 100;
+}
+
+.logo {
+  font-size: 10px !important;
+  color: rgb(243, 243, 243);
+  text-decoration: none;
+  font-weight: 100;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.homeSocial {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 40px;
+  width: 170px;
+}
+
+.homeSocial a {
+  position: relative;
+  display: inline-flex;
+  height: 40px;
+  width: 40px;
+  background: midnightblue;
+  border: 2px solid midnightblue;
+  border-radius: 50%;
+  font-size: 20px;
+  color: #4851ff;
+  text-decoration: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.homeSocial a:hover {
+  color: rgb(104, 0, 130);
+}
+
+.homeSocial a::before {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: cyan;
+  z-index: -1;
+  transition: 0.3s;
+}
+
+.homeSocial a:hover::before {
+  width: 100%;
+}

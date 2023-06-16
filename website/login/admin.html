@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome, Abner!</title>
+    <link rel="stylesheet" href="adminstyle.css" />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="header">
+      <a href="#" class="logo">Admin Dashboard</a>
+    </header>
+    <div class="coverdiv">
+      <div class="boxdiv">
+        <table>
+          <h3>WORK EXPERIENCE</h3>
+          <label for="removeId">Enter Experience ID to Remove:</label>
+          <input type="text" id="removeId" placeholder="Enter ID" />
+          <button id="removeButton">Remove</button>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Role</th>
+              <th>Time</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody id="table2"></tbody>
+        </table>
+        <!-- Add experience form -->
+        <div id="addExperienceForm" class="hidden">
+          <h3>Add Experience</h3>
+          <form id="experienceForm">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" required />
+            <label for="time">Time</label>
+            <input type="text" id="time" name="time" />
+            <label for="description">Description</label>
+            <textarea id="description" name="description"></textarea>
+            <button type="submit">Add</button>
+          </form>
+        </div>
+
+        <form id="editForm" class="hidden">
+          <label for="idExperiences">Id:</label>
+          <input type="text" id="idExperiences" name="idExperiences" required />
+
+          <label for="titleEdit">Título:</label>
+          <input type="text" id="titleEdit" name="titleEdit" required />
+
+          <label for="timeEdit">Tempo:</label>
+          <input type="text" id="timeEdit" name="timeEdit" required />
+
+          <label for="descriptionEdit">Descrição:</label>
+          <textarea
+            id="descriptionEdit"
+            name="descriptionEdit"
+            required
+          ></textarea>
+
+          <button type="submit" onclick="editarForm()">Salvar</button>
+        </form>
+
+        <!-- Add experience button -->
+        <button id="addExperienceButton">Add Experience</button>
+
+        <button class="editButton" onclick="mostrarIdform()">
+          Edit Experience
+        </button>
+      </div>
+      <div class="boxdiv">
+        <table>
+          <h3>EDUCATION</h3>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Institutiton</th>
+              <th>Time</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody id="table1"></tbody>
+        </table>
+      </div>
+      <div class="boxdiv">
+        <table>
+          <h3>SKILLS</h3>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody id="table3"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="homeSocial">
+      <a href="https://github.com/abnxgod/" target="_blank"
+        ><i class="bx bxl-github"></i
+      ></a>
+      <a
+        href="https://www.linkedin.com/in/abner-pompermayer-7a8449202/"
+        target="_blank"
+        ><i class="bx bxl-linkedin"></i
+      ></a>
+      <a href=""><i class="bx bxl-twitter"></i></a>
+    </div>
+  </body>
+
+  <script>
+    function getAllEducation() {
+      fetch("http://localhost:8080/api/education/allEducation")
+        .then((response) => response.json())
+        .then((data) => {
+          const tableBody = document.getElementById("table1");
+
+          // Loop through the data and generate table rows
+          data.forEach((education) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+            <td>${education.id}</td>
+              <td>${education.instutition}</td>
+              <td>${education.time}</td>
+              <td>${education.description}</td>
+            `;
+            tableBody.appendChild(row);
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+    getAllEducation();
+  </script>
+
+  <script>
+    function getAllExperiences() {
+      fetch("http://localhost:8080/api/experiences/allExperience")
+        .then((response) => response.json())
+        .then((data) => {
+          const tableBody = document.getElementById("table2");
+
+          // Loop through the data and generate table rows
+          data.forEach((experience) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+            <td>${experience.id}</td>
+            <td>${experience.title}</td>
+            <td>${experience.time}</td>
+            <td>${experience.description}</td>
+          `;
+            tableBody.appendChild(row);
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+    getAllExperiences();
+  </script>
+
+  <script>
+    // Show/hide add experience form
+    const addExperienceButton = document.getElementById("addExperienceButton");
+    const addExperienceForm = document.getElementById("addExperienceForm");
+
+    addExperienceButton.addEventListener("click", () => {
+      addExperienceForm.classList.toggle("hidden");
+    });
+
+    // Submit form and add experience
+    const experienceForm = document.getElementById("experienceForm");
+
+    experienceForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const titleInput = document.getElementById("title");
+      const timeInput = document.getElementById("time");
+      const descriptionInput = document.getElementById("description");
+
+      const experienceData = {
+        title: titleInput.value,
+        time: timeInput.value,
+        description: descriptionInput.value,
+      };
+
+      fetch("http://localhost:8080/api/experiences/addExperience", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(experienceData),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // Reset form values
+          titleInput.value = "";
+          timeInput.value = "";
+          descriptionInput.value = "";
+
+          // Add the new experience to the table
+          const tableBody = document.getElementById("table2");
+          const row = document.createElement("tr");
+          row.innerHTML = `
+          <td>${data.id}</td>
+        <td>${data.title}</td>
+        <td>${data.time}</td>
+        <td>${data.description}</td>
+      `;
+          tableBody.appendChild(row);
+
+          // Hide the form
+          addExperienceForm.classList.add("hidden");
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    });
+  </script>
+
+  <script>
+    
+    const removeButton = document.getElementById("removeButton");
+
+    removeButton.addEventListener("click", () => {
+      const removeIdInput = document.getElementById("removeId");
+      const experienceId = removeIdInput.value;
+
+      fetch(`http://localhost:8080/api/experiences/${experienceId}`, {
+        method: "DELETE",
+      })
+        .then((response) => {
+          if (response.ok) {
+            // Remove the corresponding row from the table
+            const tableBody = document.getElementById("table2");
+            const rows = tableBody.getElementsByTagName("tr");
+
+            for (let i = 0; i < rows.length; i++) {
+              const row = rows[i];
+              const idCell = row.getElementsByTagName("td")[0]; // Assuming the ID is in the first column
+
+              if (idCell.textContent === experienceId) {
+                row.remove();
+                break;
+              }
+            }
+
+            // Display confirmation message
+            console.log("Experience deleted, Abner.");
+          } else {
+            console.error("Error:", response.status);
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        })
+        .finally(() => {
+          // Reset remove ID input
+          removeIdInput.value = "";
+        });
+    });
+  </script>
+
+  <script>
+    
+    function mostrarIdform() {
+      if (editForm.classList.contains("hidden")) {
+        editForm.classList.remove("hidden");
+      } else {
+        
+        editForm.classList.add("hidden");
+      }
+    }
+
+    function editarForm() {
+      const title = document.getElementById("titleEdit").value;
+      const time = document.getElementById("timeEdit").value;
+      const description = document.getElementById("descriptionEdit").value;
+
+      const editExperienceData = {
+        title: title,
+        time: time,
+        description: description,
+      };
+
+      const url = `http://localhost:8080/api/experiences/${
+        document.getElementById("idExperiences").value
+      }`;
+      return fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editExperienceData),
+      })
+        .then((response) => {
+          
+          return response.json();
+        })
+        .then((data) => {
+          
+          console.log(data);
+        })
+        .catch((error) => console.error(error));
+    }
+  </script>
+
+  <script>
+    function getAllSkills() {
+      fetch("http://localhost:8080/api/skill/allSkill")
+        .then((response) => response.json())
+        .then((data) => {
+          const tableBody = document.getElementById("table3");
+
+          // Loop through the data and generate table rows
+          data.forEach((skill) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+          <td>${skill.id}</td>
+          <td>${skill.title}</td>
+          <td>${skill.description}</td>
+        `;
+            tableBody.appendChild(row);
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+    getAllSkills();
+  </script>
+</html>
